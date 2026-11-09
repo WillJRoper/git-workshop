@@ -113,12 +113,6 @@
   display: flex; flex-direction: column; justify-content: center;
 }
 
-.chat {
-  display: inline-block; padding: 0.2em 0.8em; border-radius: 999px;
-  border: 1px solid var(--line); color: var(--muted); font-size: 0.8rem;
-}
-.chat::before { content: '# '; color: var(--accent); }
-
 /* quiz table */
 .smells { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
 .smells td { padding: 0.5em 0.6em; border-bottom: 1px solid var(--grid); vertical-align: top; }

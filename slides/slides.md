@@ -27,7 +27,7 @@ class: text-center
 <img src="/img/oxford_logo.png" class="absolute left-6 bottom-6 h-16" alt="University of Oxford" />
 <img src="/img/oxrse_logo.png" class="absolute right-6 bottom-6 h-16" alt="OxRSE" />
 
-<div class="credit">Condensed from the OxRSE <a href="https://github.com/OxfordRSE/training-slides-core" target="_blank">version control</a> training deck</div>
+<div class="absolute bottom-6 left-0 right-0 text-center text-xs muted">Condensed from the OxRSE <a href="https://github.com/OxfordRSE/training-slides-core" target="_blank">version control</a> training deck</div>
 
 <!--
 15 minutes of slides, 45 hands-on. Keep moving.
@@ -64,8 +64,6 @@ class: text-center
 <div class="term warn-card"><div class="accent mb-1">[3] "I can't reproduce my results"</div><div class="muted">Script changed since the paper went in. The old version is gone.</div></div>
 <div class="term warn-card"><div class="accent mb-1">[4] "Can you email me your code?"</div><div class="muted">Two people edit. One overwrites the other. Nobody notices for a month.</div></div>
 </div>
-
-<div class="mt-6 text-center"><span class="chat">type the numbers in chat</span></div>
 
 <div v-click class="mt-6 text-center text-lg">Same root cause: <strong>no structured history</strong>. No safe way to undo, explore, or combine work.</div>
 </div>
@@ -162,7 +160,7 @@ class: section-card
 <div class="snap">B1</div><div class="snap">B2</div><div class="snap ref">B2</div><div class="muted text-xs self-center">test_life.py</div>
 <div class="snap">C1</div><div class="snap ref">C1</div><div class="snap ref">C1</div><div class="muted text-xs self-center">README.md</div>
 </div>
-<div class="muted text-xs mt-3"><span class="snap ref inline-block px-2">grey</span> = unchanged, just a pointer to the earlier blob</div>
+<div class="muted text-xs mt-3"><span class="snap ref inline-block px-2">grey</span> = unchanged, points at the earlier blob</div>
 </div>
 </div>
 </div>
@@ -255,7 +253,7 @@ diff --git a/life.py b/life.py
 </div>
 
 ---
-clicks: 4
+clicks: 3
 ---
 
 # Branching
@@ -264,7 +262,7 @@ clicks: 4
 
 <BranchGraph :step="$clicks" />
 
-<div v-click="4" class="text-sm mt-2">
+<div v-click="3" class="text-sm mt-2">
 
 - One branch per task. Short-lived. Named for the change.
 - <code>git switch main</code> flips your working tree back instantly.
@@ -272,19 +270,17 @@ clicks: 4
 </div>
 
 ---
-clicks: 3
----
 
 # Merging
 
-<BranchGraph :step="4 + Math.min($clicks, 1)" />
+<BranchGraph :step="4" />
 
 <div class="grid grid-cols-2 gap-8 text-sm mt-2">
-<div v-click="2">
+<div v-click="1">
 <div class="accent">usually automatic</div>
 Different files, or different lines of the same file: Git combines them. No human needed.
 </div>
-<div v-click="3">
+<div v-click="2">
 <div class="bad">sometimes a conflict</div>
 
 ```text {*}{lines:false}
@@ -311,7 +307,7 @@ Conflicts aren't failures; it's Git refusing to guess. We'll probably see one li
 <div class="grid grid-cols-[1fr_1.2fr] gap-10 items-center">
 <div>
 
-<a href="https://git-school.github.io/visualizing-git/" target="_blank">git-school.github.io/visualizing-git</a>
+<a href="https://git-school.github.io/visualizing-git/" target="_blank" rel="noopener" class="term block text-center !border-solid !border-b-solid" style="border-color: var(--theory)"><div class="muted text-sm">$ open</div><div>git-school.github.io/<br>visualizing-git</div></a>
 
 <div class="muted text-sm mt-4">A sandbox. Nothing can break. Open it and type along.</div>
 
@@ -339,10 +335,36 @@ Optionally `git checkout HEAD~2` to show detached HEAD, which they'll meet in bi
 -->
 
 ---
+clicks: 5
+---
+
+# Working With A Remote
+
+<div class="body">
+<RemoteFlow :step="$clicks" />
+
+<div v-click="5" class="text-sm mt-4">
+
+- The remote is just another copy of the repo. Off-machine backup for free.
+- Same history everywhere. Commit locally, <code>push</code> to share, <code>pull</code> to catch up.
+
+</div>
+</div>
+
+<div class="credit">Pushing needs authentication: an SSH key or <code>gh auth login</code>. Set up before today, see the README.</div>
+
+<!--
+Build it up: create an empty repo on GitHub, add it as origin, push. Clone it on another machine, push from there, pull back on the laptop.
+Point out: nothing special about the remote. It's a clone that happens to live on GitHub.
+-->
+
+---
 clicks: 4
 ---
 
 # Working With Others
+
+<div class="muted text-sm -mt-4 mb-2">Someone else's repo. You can't push to it. Fork it.</div>
 
 <div class="body">
 <ForkFlow :step="$clicks" />
@@ -395,7 +417,7 @@ git push -u origin fix-glider     # first push of a new branch
 
 # Spot The Smell
 
-<div class="muted text-xs -mt-4 mb-3">Fine or not? Answer in chat before each reveal.</div>
+<div class="muted text-xs -mt-4 mb-3">Fine or not?</div>
 
 <table class="smells">
 <tbody>
@@ -514,7 +536,7 @@ During bisect you're in detached HEAD. Always `git bisect reset` before branchin
 <div class="term text-sm">
 <div class="term-bar"><span /><span /><span /></div>
 <div class="muted">$ cat HELP.txt</div>
-<div class="mt-2">Stuck? Say so in chat.</div>
+<div class="mt-2">Stuck? Ask.</div>
 <div class="mt-2">Full instructions in the README.</div>
 <div class="mt-2">No local git? Open the fork in <strong>Codespaces</strong>.</div>
 <div class="mt-4 muted">We review the PRs together at the end.</div>
