@@ -1,0 +1,15 @@
+# python
+__pycache__/
+*.pyc
+.venv/
+
+# slidev
+slides/node_modules/
+slides/dist/
+slides/components.d.ts
+slides/.remote-assets/
+slides/.vite-inspect/
+*.local
+
+# os / editor
+.DS_Store
