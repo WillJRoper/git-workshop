@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Version Control with Git</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/black.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<style>
+:root {
+  --r-background-color: #15171c;
+  --r-main-font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --r-heading-font: var(--r-main-font);
+  --r-heading-text-transform: none;
+  --r-heading-font-weight: 700;
+  --r-main-font-size: 34px;
+  --r-link-color: #6cb6ff;
+  --accent: #f6a93b;
+  --good: #3ddc84;
+  --bad: #ff5c5c;
+  --muted: #8a93a6;
+  --box: #232733;
+}
+.reveal h1 { font-size: 2.2em; }
+.reveal h2 { font-size: 1.5em; margin-bottom: .6em; }
+.reveal h3 { font-size: 1.1em; color: var(--accent); }
+.reveal .muted { color: var(--muted); }
+.reveal .small { font-size: .7em; }
+.reveal .tiny { font-size: .55em; color: var(--muted); }
+.reveal code { color: var(--accent); font-size: .9em; }
+.reveal pre { width: 100%; box-shadow: none; font-size: .6em; }
+.reveal pre code { padding: .8em 1em; border-radius: 8px; max-height: 500px; }
+.reveal ul { margin-left: .8em; }
+.reveal li { margin: .25em 0; }
+.reveal section img { border: none; background: none; box-shadow: none; }
+.cols { display: flex; gap: 1.2em; align-items: flex-start; text-align: left; }
+.cols > * { flex: 1; }
+.cards { display: grid; grid-template-columns: 1fr 1fr; gap: .6em; text-align: left; }
+.card { background: var(--box); border-radius: 10px; padding: .5em .8em; font-size: .75em; border-left: 6px solid var(--accent); }
+.card b { display: block; font-size: 1.1em; margin-bottom: .2em; }
+.card.good { border-color: var(--good); }
+.card.bad { border-color: var(--bad); }
+.chat { display: inline-block; margin-top: .6em; padding: .3em .8em; border-radius: 999px; background: #2a2f3d; font-size: .7em; }
+.chat::before { content: "💬 "; }
+.reveal svg { max-width: 100%; height: auto; overflow: visible; }
+.reveal svg text { font-family: var(--r-main-font); fill: #e8e8e8; }
+.reveal svg .mono { font-family: "JetBrains Mono", Menlo, monospace; }
+.reveal svg .lbl { font-size: 20px; }
+.reveal svg .cmd { font-size: 18px; fill: var(--accent); font-family: Menlo, monospace; }
+.reveal svg .node { fill: #6cb6ff; stroke: #15171c; stroke-width: 3; }
+.reveal svg .node.feat { fill: var(--accent); }
+.reveal svg .node.merge { fill: #c792ea; }
+.reveal svg .node.good { fill: var(--good); }
+.reveal svg .node.bad { fill: var(--bad); }
+.reveal svg .node.dim { fill: #3a3f4d; }
+.reveal svg .edge { stroke: #6a7184; stroke-width: 4; fill: none; }
+.reveal svg .box { fill: var(--box); stroke: #3a3f4d; stroke-width: 2; rx: 12; }
+.reveal svg .arrow { stroke: var(--accent); stroke-width: 4; fill: none; marker-end: url(#ah); }
+.reveal svg .arrow.back { stroke: #6cb6ff; marker-end: url(#ahb); }
+.reveal .fragment.highlight-good.visible { color: var(--good); }
+.reveal .fragment.highlight-bad.visible { color: var(--bad); }
+.reveal .fragment.dim { transition: opacity .3s; }
+.reveal .fragment.dim.visible { opacity: .25; }
+table.smells { font-size: .62em; width: 100%; text-align: left; }
+table.smells td { padding: .25em .5em; border-bottom: 1px solid #333; vertical-align: top; }
+table.smells td:first-child { font-family: Menlo, monospace; color: #ddd; white-space: nowrap; }
+.verdict { font-weight: 700; }
+.verdict.ok { color: var(--good); }
+.verdict.no { color: var(--bad); }
+.timeline { display: flex; justify-content: space-between; margin-top: 1em; }
+.tl { flex: 1; text-align: center; font-size: .65em; padding: 0 .3em; border-top: 4px solid #3a3f4d; padding-top: .5em; }
+.tl b { display: block; font-size: 1.3em; color: var(--accent); }
+.tl.central { border-color: #6cb6ff; }
+.tl.dist { border-color: var(--good); }
+.key { display: flex; gap: 1.5em; justify-content: center; font-size: .55em; color: var(--muted); margin-top: .4em; }
+.key span::before { content: ""; display: inline-block; width: .9em; height: .9em; border-radius: 50%; margin-right: .3em; vertical-align: middle; }
+.key .c::before { background: #6cb6ff; } .key .d::before { background: var(--good); }
+.big { font-size: 1.6em; font-weight: 700; color: var(--accent); }
+.steps { text-align: left; font-size: .7em; counter-reset: s; }
+.steps li { list-style: none; margin: .35em 0; padding-left: 2em; position: relative; }
+.steps li::before { counter-increment: s; content: counter(s); position: absolute; left: 0; top: 0; width: 1.4em; height: 1.4em; border-radius: 50%; background: var(--accent); color: #111; font-weight: 700; text-align: center; font-size: .9em; line-height: 1.4em; }
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1 TITLE -->
+<section>
+  <h1>Version Control with Git</h1>
+  <p class="muted">History, the mental model, and a bug hunt</p>
+  <p class="small">Will Roper &middot; University of Sussex</p>
+  <p class="tiny">Condensed from the Oxford RSE <em>Version Control</em> training deck (OxfordRSE/training-slides-core), with thanks.</p>
+  <aside class="notes">~15 min of slides, then 45 min hands-on. Keep moving.</aside>
+</section>
+
+<!-- 2 PAIN -->
+<section>
+  <h2>Which of these have you done?</h2>
+  <div class="cards">
+    <div class="card"><b>1. "I lost my code"</b>One laptop. Disk died / stolen / <code>rm -rf</code>.</div>
+    <div class="card"><b>2. <code>final_v7_REAL_final2.py</code></b>Versions tracked by filename. Which one made Figure 3?</div>
+    <div class="card"><b>3. "I can't reproduce my results"</b>Script changed since the paper. Old version overwritten.</div>
+    <div class="card"><b>4. "Can you email me your code?"</b>Two people edit. One overwrites the other. Nobody notices.</div>
+  </div>
+  <span class="chat">Type the numbers in chat</span>
+  <p class="fragment small" style="margin-top:.8em">Shared root cause: <b>no structured history</b>, no safe way to undo, explore, or combine work.</p>
+  <aside class="notes">Remote poll via chat. Wait ~20s, read a few out.</aside>
+</section>
+
+<!-- 3 WHAT IS VC -->
+<section>
+  <h2>What version control is</h2>
+  <div class="cols">
+    <div>
+      <ul class="small">
+        <li>A tool that records <b>changes</b> to files: what, who, when, and <b>why</b></li>
+        <li>Built for plain text: code, config, docs, tests, LaTeX</li>
+        <li>Like Wikipedia page history, or Track Changes, for your whole project</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="small">
+        <li class="fragment"><b>Backup</b>: every state recoverable, copy off-machine &rarr; fixes 1</li>
+        <li class="fragment"><b>Reproducibility</b>: tag the version that made the paper &rarr; fixes 2, 3</li>
+        <li class="fragment"><b>Collaboration</b>: independent edits combined, conflicts surfaced &rarr; fixes 4</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 4 HISTORY -->
+<section>
+  <h2>A short history</h2>
+  <div class="timeline">
+    <div class="tl fragment"><b>1972</b>SCCS<br><span class="muted">one file, deltas</span></div>
+    <div class="tl fragment"><b>1982</b>RCS<br><span class="muted">reverse deltas</span></div>
+    <div class="tl central fragment"><b>1986</b>CVS<br><span class="muted">central server, concurrent edits</span></div>
+    <div class="tl central fragment"><b>2000</b>Subversion<br><span class="muted">atomic commits, still central</span></div>
+    <div class="tl dist fragment"><b>2005</b>Git &amp; Mercurial<br><span class="muted">distributed: every clone is the full history</span></div>
+    <div class="tl dist fragment"><b>2008</b>GitHub<br><span class="muted">Git + web + social</span></div>
+  </div>
+  <div class="key"><span class="c">centralised: one server holds history</span><span class="d">distributed: everyone holds history</span></div>
+  <p class="fragment small" style="margin-top:1em">Git was written by Linus Torvalds in ~2 weeks to manage the Linux kernel, after the previous tool revoked its free licence.</p>
+</section>
+
+<!-- 5 WHY GIT -->
+<section>
+  <h2>Why Git won</h2>
+  <div class="cols">
+    <ul class="small">
+      <li><b>Distributed.</b> No single point of failure. Works offline.</li>
+      <li><b>Snapshots, not deltas.</b> Each commit stores the whole tree; unchanged files deduplicated by hash.</li>
+      <li><b>Branches are pointers</b>, not copies. Creating one is instant.</li>
+      <li><b>Built for thousands</b> of contributors. Your group of 3 is fine.</li>
+      <li><b>GitHub / GitLab</b> turned it into a network.</li>
+    </ul>
+    <svg viewBox="0 0 420 260" width="380">
+      <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f6a93b"/></marker>
+      <marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6cb6ff"/></marker></defs>
+      <text x="10" y="24" class="lbl">commit:</text>
+      <g class="mono" style="font-size:16px">
+        <text x="30" y="50" class="lbl">C1</text><text x="130" y="50" class="lbl">C2</text><text x="230" y="50" class="lbl">C3</text><text x="330" y="50" class="lbl">C4</text>
+      </g>
+      <g>
+        <rect x="10" y="70" width="80" height="40" class="box"/><text x="50" y="96" text-anchor="middle" class="lbl">A1</text>
+        <rect x="110" y="70" width="80" height="40" class="box"/><text x="150" y="96" text-anchor="middle" class="lbl" fill="#8a93a6">A1</text>
+        <rect x="210" y="70" width="80" height="40" class="box"/><text x="250" y="96" text-anchor="middle" class="lbl">A2</text>
+        <rect x="310" y="70" width="80" height="40" class="box"/><text x="350" y="96" text-anchor="middle" class="lbl" fill="#8a93a6">A2</text>
+        <rect x="10" y="130" width="80" height="40" class="box"/><text x="50" y="156" text-anchor="middle" class="lbl">B1</text>
+        <rect x="110" y="130" width="80" height="40" class="box"/><text x="150" y="156" text-anchor="middle" class="lbl">B2</text>
+        <rect x="210" y="130" width="80" height="40" class="box"/><text x="250" y="156" text-anchor="middle" class="lbl" fill="#8a93a6">B2</text>
+        <rect x="310" y="130" width="80" height="40" class="box"/><text x="350" y="156" text-anchor="middle" class="lbl">B3</text>
+        <rect x="10" y="190" width="80" height="40" class="box"/><text x="50" y="216" text-anchor="middle" class="lbl">C1</text>
+        <rect x="110" y="190" width="80" height="40" class="box"/><text x="150" y="216" text-anchor="middle" class="lbl" fill="#8a93a6">C1</text>
+        <rect x="210" y="190" width="80" height="40" class="box"/><text x="250" y="216" text-anchor="middle" class="lbl" fill="#8a93a6">C1</text>
+        <rect x="310" y="190" width="80" height="40" class="box"/><text x="350" y="216" text-anchor="middle" class="lbl">C2</text>
+      </g>
+      <text x="10" y="255" class="lbl" style="font-size:15px" fill="#8a93a6">grey = unchanged, stored once, referenced by hash</text>
+    </svg>
+  </div>
+</section>
+
+<!-- 6 VOCAB -->
+<section>
+  <h2>Vocabulary</h2>
+  <div class="cards" style="font-size:1.05em">
+    <div class="card"><b>Repository</b>Your project folder plus a hidden <code>.git/</code> holding the full history. You rarely look inside.</div>
+    <div class="card"><b>Commit</b>A labelled snapshot of the whole project, with author, date, message, and a pointer to its parent.</div>
+    <div class="card"><b>Working tree</b>The files you actually see and edit.</div>
+    <div class="card"><b>Staging area</b>The set of changes you have picked for the <em>next</em> commit. Lets you commit part of your edits.</div>
+    <div class="card"><b>Local repo</b>The copy on your machine. Full history. Works with no network.</div>
+    <div class="card"><b>Remote</b>A copy hosted elsewhere (GitHub). Your off-site backup and the meeting point for collaborators.</div>
+    <div class="card"><b>Branch</b>A movable pointer to a commit. An independent line of work.</div>
+    <div class="card"><b>HEAD</b>Where you currently are in the history.</div>
+  </div>
+</section>
+
+<!-- 7 FLOW ANIMATION -->
+<section>
+  <h2>The four places your code lives</h2>
+  <svg viewBox="0 0 960 330" width="960">
+    <defs><marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f6a93b"/></marker>
+    <marker id="ah2b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6cb6ff"/></marker></defs>
+    <g>
+      <rect x="10" y="60" width="200" height="120" class="box"/><text x="110" y="110" text-anchor="middle" class="lbl">Working tree</text><text x="110" y="140" text-anchor="middle" class="lbl" style="font-size:15px" fill="#8a93a6">files you edit</text>
+      <rect x="260" y="60" width="200" height="120" class="box"/><text x="360" y="110" text-anchor="middle" class="lbl">Staging area</text><text x="360" y="140" text-anchor="middle" class="lbl" style="font-size:15px" fill="#8a93a6">"the index"</text>
+      <rect x="510" y="60" width="200" height="120" class="box"/><text x="610" y="110" text-anchor="middle" class="lbl">Local repo</text><text x="610" y="140" text-anchor="middle" class="lbl" style="font-size:15px" fill="#8a93a6">.git/ history</text>
+      <rect x="760" y="60" width="190" height="120" class="box" style="stroke:#6cb6ff"/><text x="855" y="110" text-anchor="middle" class="lbl">Remote</text><text x="855" y="140" text-anchor="middle" class="lbl" style="font-size:15px" fill="#8a93a6">GitHub</text>
+      <line x1="735" y1="20" x2="735" y2="220" stroke="#3a3f4d" stroke-dasharray="8 8" stroke-width="2"/>
+      <text x="360" y="30" text-anchor="middle" class="lbl" style="font-size:16px" fill="#8a93a6">your machine</text>
+      <text x="855" y="30" text-anchor="middle" class="lbl" style="font-size:16px" fill="#8a93a6">the internet</text>
+    </g>
+    <g class="fragment"><path d="M210 95 L260 95" style="stroke:#f6a93b;stroke-width:4;marker-end:url(#ah2)"/><text x="235" y="80" text-anchor="middle" class="cmd">git add</text></g>
+    <g class="fragment"><path d="M460 95 L510 95" style="stroke:#f6a93b;stroke-width:4;marker-end:url(#ah2)"/><text x="485" y="80" text-anchor="middle" class="cmd">git commit</text></g>
+    <g class="fragment"><path d="M710 95 L760 95" style="stroke:#f6a93b;stroke-width:4;marker-end:url(#ah2)"/><text x="735" y="80" text-anchor="middle" class="cmd">git push</text></g>
+    <g class="fragment"><path d="M760 150 L710 150" style="stroke:#6cb6ff;stroke-width:4;marker-end:url(#ah2b)"/><text x="735" y="175" text-anchor="middle" class="cmd" style="fill:#6cb6ff">git fetch</text></g>
+    <g class="fragment"><path d="M760 200 C 500 260, 300 260, 60 185" style="stroke:#6cb6ff;stroke-width:4;marker-end:url(#ah2b)"/><text x="420" y="270" text-anchor="middle" class="cmd" style="fill:#6cb6ff">git pull  (fetch + merge into working tree)</text></g>
+    <g class="fragment"><path d="M855 190 C 855 320, 110 320, 110 190" style="stroke:#6cb6ff;stroke-width:4;marker-end:url(#ah2b)"/><text x="480" y="318" text-anchor="middle" class="cmd" style="fill:#6cb6ff">git clone  (first time: copies everything)</text></g>
+    <g class="fragment"><text x="110" y="215" text-anchor="middle" class="cmd" style="fill:#8a93a6">git status / git diff</text></g>
+  </svg>
+  <p class="fragment small"><code>git status</code> is your friend. Run it constantly. It tells you which box each change is in.</p>
+  <aside class="notes">Emphasise: commit is local. Nothing leaves your machine until push. Staging lets you split edits into separate commits.</aside>
+</section>
+
+<!-- 8 COMMIT ANATOMY -->
+<section>
+  <h2>A commit</h2>
+  <div class="cols">
+    <pre><code class="language-text" data-trim>
+commit 5d3e831e867d5a4f1a83750ad82fd46041ac58e5
+Author: Ada Lovelace &lt;ada@example.org&gt;
+Date:   Tue Nov 4 10:12:33 2026 +0000
+
+    Fix wrap-around when glider reaches grid edge
+
+diff --git a/life.py b/life.py
+@@ -14,7 +14,7 @@ def neighbours(cell, width, height):
+-        yield (x + dx), (y + dy)
++        yield (x + dx) % width, (y + dy) % height
+    </code></pre>
+    <div>
+      <ul class="small">
+        <li><b>Hash</b>: ID computed from content + parent. Tamper-evident chain.</li>
+        <li><b>Author, date</b></li>
+        <li><b>Message</b>: <em>why</em>, not what. The diff already says what.</li>
+        <li><b>Snapshot</b> of every file.</li>
+        <li><b>Parent</b>: makes it a history.</li>
+      </ul>
+      <svg viewBox="0 0 360 70" width="340" style="margin-top:.5em">
+        <line x1="40" y1="35" x2="320" y2="35" class="edge"/>
+        <circle cx="40" cy="35" r="16" class="node"/><circle cx="130" cy="35" r="16" class="node"/><circle cx="220" cy="35" r="16" class="node"/><circle cx="310" cy="35" r="16" class="node"/>
+        <text x="40" y="68" text-anchor="middle" class="lbl" style="font-size:14px">a1f3</text><text x="130" y="68" text-anchor="middle" class="lbl" style="font-size:14px">9c02</text><text x="220" y="68" text-anchor="middle" class="lbl" style="font-size:14px">77be</text><text x="310" y="68" text-anchor="middle" class="lbl" style="font-size:14px">5d3e</text>
+        <text x="310" y="12" text-anchor="middle" class="cmd" style="font-size:14px">HEAD, main</text>
+      </svg>
+      <p class="tiny"><code>git log</code> walks the chain. <code>git diff a1f3 5d3e</code> compares any two.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 9 BRANCHING -->
+<section>
+  <h2>Branching</h2>
+  <p class="small muted">A branch is a pointer. Commits on it don't disturb <code>main</code>.</p>
+  <svg viewBox="0 0 900 260" width="900">
+    <line x1="60" y1="80" x2="260" y2="80" class="edge"/>
+    <circle cx="60" cy="80" r="18" class="node"/><circle cx="160" cy="80" r="18" class="node"/><circle cx="260" cy="80" r="18" class="node"/>
+    <text x="60" y="120" text-anchor="middle" class="lbl">A</text><text x="160" y="120" text-anchor="middle" class="lbl">B</text><text x="260" y="120" text-anchor="middle" class="lbl">C</text>
+    <text x="260" y="45" text-anchor="middle" class="cmd">main</text>
+    <g class="fragment"><text x="420" y="230" text-anchor="middle" class="cmd">git switch -c fix-glider</text><text x="260" y="215" text-anchor="middle" class="cmd" style="fill:#f6a93b">fix-glider</text></g>
+    <g class="fragment"><path d="M260 80 C 310 80, 310 180, 360 180" class="edge"/><circle cx="360" cy="180" r="18" class="node feat"/><text x="360" y="220" text-anchor="middle" class="lbl">D</text><text x="360" y="215" text-anchor="middle" class="cmd" style="fill:#f6a93b;opacity:0">.</text></g>
+    <g class="fragment"><line x1="360" y1="180" x2="460" y2="180" class="edge"/><circle cx="460" cy="180" r="18" class="node feat"/><text x="460" y="220" text-anchor="middle" class="lbl">E</text></g>
+    <g class="fragment"><line x1="260" y1="80" x2="360" y2="80" class="edge"/><circle cx="360" cy="80" r="18" class="node"/><text x="360" y="120" text-anchor="middle" class="lbl">F</text><text x="360" y="45" text-anchor="middle" class="cmd">main</text>
+      <text x="650" y="90" class="lbl" style="font-size:20px" fill="#8a93a6">meanwhile, a collaborator</text><text x="650" y="115" class="lbl" style="font-size:20px" fill="#8a93a6">pushed F to main</text></g>
+  </svg>
+  <ul class="small fragment">
+    <li>One branch per task. Short-lived. Named for the change.</li>
+    <li><code>git switch main</code> flips your working tree back instantly.</li>
+  </ul>
+</section>
+
+<!-- 10 MERGING -->
+<section>
+  <h2>Merging</h2>
+  <svg viewBox="0 0 900 240" width="900">
+    <line x1="60" y1="80" x2="360" y2="80" class="edge"/>
+    <path d="M260 80 C 310 80, 310 180, 360 180" class="edge"/><line x1="360" y1="180" x2="460" y2="180" class="edge"/>
+    <circle cx="60" cy="80" r="18" class="node"/><circle cx="160" cy="80" r="18" class="node"/><circle cx="260" cy="80" r="18" class="node"/><circle cx="360" cy="80" r="18" class="node"/>
+    <circle cx="360" cy="180" r="18" class="node feat"/><circle cx="460" cy="180" r="18" class="node feat"/>
+    <text x="360" y="45" text-anchor="middle" class="cmd">main</text><text x="460" y="220" text-anchor="middle" class="cmd">fix-glider</text>
+    <g class="fragment"><path d="M360 80 C 430 80, 480 80, 560 80" class="edge"/><path d="M460 180 C 510 180, 510 80, 560 80" class="edge"/><circle cx="560" cy="80" r="18" class="node merge"/><text x="560" y="45" text-anchor="middle" class="cmd">main</text><text x="560" y="120" text-anchor="middle" class="lbl">M</text>
+      <text x="640" y="75" class="lbl" style="font-size:20px">merge commit: two parents</text><text x="640" y="100" class="lbl" style="font-size:20px" fill="#8a93a6">git switch main; git merge fix-glider</text></g>
+  </svg>
+  <div class="cols small">
+    <div class="fragment">
+      <h3>Usually automatic</h3>
+      <p>Different files, or different lines of the same file: Git combines them. No human needed.</p>
+    </div>
+    <div class="fragment">
+      <h3>Sometimes a conflict</h3>
+      <pre><code class="language-text" data-trim>
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+    if count == 3:
+=======
+    if count in (2, 3):
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; fix-glider
+      </code></pre>
+      <p>Same lines edited both sides. Git stops, marks the file, you pick. Then <code>add</code> + <code>commit</code>.</p>
+    </div>
+  </div>
+  <aside class="notes">Conflicts are not failures; they're Git refusing to guess. We'll probably see one live at the end when the second PR lands.</aside>
+</section>
+
+<!-- 11 LIVE DEMO -->
+<section data-background-color="#0f1116">
+  <h2>Live: watch the graph move</h2>
+  <p><a href="https://git-school.github.io/visualizing-git/" target="_blank">git-school.github.io/visualizing-git</a></p>
+  <pre><code class="language-bash" data-trim>
+git commit
+git commit
+git switch -c feature     # (type: git checkout -b feature)
+git commit
+git switch main
+git commit
+git merge feature
+  </code></pre>
+  <p class="tiny">Open it yourself and type along. It's a sandbox: nothing can break.</p>
+  <aside class="notes">2 minutes max. Show branch pointer moving, then merge creating a two-parent node. Optionally `git checkout HEAD~2` to show detached HEAD, which they'll meet in bisect.</aside>
+</section>
+
+<!-- 12 REMOTES / FORK / PR -->
+<section>
+  <h2>Working with others: fork, clone, pull request</h2>
+  <svg viewBox="0 0 960 300" width="960">
+    <defs><marker id="ah3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f6a93b"/></marker></defs>
+    <rect x="40" y="30" width="260" height="90" class="box" style="stroke:#6cb6ff"/><text x="170" y="68" text-anchor="middle" class="lbl">upstream</text><text x="170" y="98" text-anchor="middle" class="lbl" style="font-size:16px" fill="#8a93a6">github.com/WillJRoper/repo</text>
+    <g class="fragment"><rect x="660" y="30" width="260" height="90" class="box" style="stroke:#6cb6ff"/><text x="790" y="68" text-anchor="middle" class="lbl">your fork</text><text x="790" y="98" text-anchor="middle" class="lbl" style="font-size:16px" fill="#8a93a6">github.com/YOU/repo</text>
+      <path d="M300 75 L660 75" style="stroke:#f6a93b;stroke-width:4;marker-end:url(#ah3)"/><text x="480" y="62" text-anchor="middle" class="cmd">Fork (button on GitHub)</text></g>
+    <g class="fragment"><rect x="660" y="190" width="260" height="90" class="box"/><text x="790" y="228" text-anchor="middle" class="lbl">your laptop</text><text x="790" y="258" text-anchor="middle" class="lbl" style="font-size:16px" fill="#8a93a6">local clone</text>
+      <path d="M790 120 L790 190" style="stroke:#f6a93b;stroke-width:4;marker-end:url(#ah3)"/><text x="860" y="160" text-anchor="middle" class="cmd">git clone</text></g>
+    <g class="fragment"><path d="M740 190 L740 120" style="stroke:#f6a93b;stroke-width:4;marker-end:url(#ah3)"/><text x="690" y="160" text-anchor="middle" class="cmd">git push</text></g>
+    <g class="fragment"><path d="M660 95 L300 95" style="stroke:#3ddc84;stroke-width:4;marker-end:url(#ah3)"/><text x="480" y="125" text-anchor="middle" class="cmd" style="fill:#3ddc84">Pull Request: "please merge my branch"</text>
+      <text x="480" y="220" text-anchor="middle" class="lbl" style="font-size:20px">A PR is a <tspan fill="#f6a93b">conversation</tspan> around a branch:</text>
+      <text x="480" y="250" text-anchor="middle" class="lbl" style="font-size:20px" fill="#8a93a6">diff, review comments, automated tests, then merge</text></g>
+  </svg>
+  <p class="fragment small">You don't need write access to contribute. That's the point of forks.</p>
+</section>
+
+<!-- 13 EVERYDAY LOOP -->
+<section>
+  <h2>The everyday loop</h2>
+  <div class="cols">
+    <pre style="flex:1.3"><code class="language-bash" data-trim>
+git pull                        # start from the latest
+git switch -c fix-glider        # branch per task
+# ... edit ...
+git status                      # what changed?
+git diff                        # exactly what changed?
+git add life.py test_life.py    # pick what goes in
+git commit -m "Fix glider dying at diagonal births"
+git push -u origin fix-glider   # first push of a new branch
+# then open a Pull Request on GitHub
+    </code></pre>
+    <ul class="small">
+      <li><b>Commit often.</b> Small commits are easy to review, revert, and bisect.</li>
+      <li><b>One idea per commit.</b> Fix and reformat? Two commits.</li>
+      <li><b>Message</b>: imperative, under ~70 chars, says why. Body if needed.</li>
+      <li><b>Pull before you push.</b></li>
+    </ul>
+  </div>
+</section>
+
+<!-- 14 QUIZ -->
+<section>
+  <h2>Spot the smell</h2>
+  <p class="tiny">Fine or not? Answer in chat before each reveal.</p>
+  <table class="smells">
+    <tr><td>git commit -m "fix"</td><td class="fragment"><span class="verdict no">Smell.</span> Fix what? Future you, bisecting at 11pm, will hate this.</td></tr>
+    <tr><td>git commit -m "Clamp timestep to avoid NaN in leapfrog"</td><td class="fragment"><span class="verdict ok">Good.</span> Imperative, specific, says why.</td></tr>
+    <tr><td>git add .venv/ data/*.hdf5</td><td class="fragment"><span class="verdict no">Smell.</span> Environments and big data don't belong in history. <code>.gitignore</code> them.</td></tr>
+    <tr><td>git add config.py &nbsp;# contains API_KEY = "sk-..."</td><td class="fragment"><span class="verdict no">Very bad.</span> History is forever and clones are public. Rotate the key.</td></tr>
+    <tr><td>One commit, 47 files, "Refactor + fix bug + new plots"</td><td class="fragment"><span class="verdict no">Smell.</span> Unreviewable, unrevertable, unbisectable.</td></tr>
+    <tr><td>git push --force origin main</td><td class="fragment"><span class="verdict no">Smell.</span> Rewrites shared history. Collaborators' clones now disagree with the remote.</td></tr>
+    <tr><td>git commit -m "WIP" on your own branch, tidied before PR</td><td class="fragment"><span class="verdict ok">Fine.</span> Your branch, your mess. Clean it up before anyone else reads it.</td></tr>
+    <tr><td>Committing final_v7.py next to final_v6.py</td><td class="fragment"><span class="verdict no">Smell.</span> That's what the history is for. One file, many commits.</td></tr>
+  </table>
+</section>
+
+<!-- 15 WHAT GOES IN -->
+<section>
+  <h2>What belongs in a repo</h2>
+  <div class="cols">
+    <div class="card good" style="font-size:.8em"><b>Yes</b>
+      <ul><li>Source code, scripts, notebooks (outputs stripped)</li><li>Config, environment specs (<code>requirements.txt</code>)</li><li>Docs, tests, small test fixtures</li><li>Anything plain-text whose line diffs mean something</li></ul>
+    </div>
+    <div class="card bad" style="font-size:.8em"><b>No</b>
+      <ul><li>Simulation outputs, large data, figures you can regenerate</li><li>Binaries, <code>__pycache__/</code>, <code>.venv/</code>, <code>build/</code></li><li>Editor and OS junk (<code>.DS_Store</code>, <code>.idea/</code>)</li><li><b>Secrets.</b> Keys, passwords, tokens, personal data</li></ul>
+    </div>
+  </div>
+  <pre class="fragment"><code class="language-bash" data-trim>
+# .gitignore
+__pycache__/
+.venv/
+*.hdf5
+.DS_Store
+  </code></pre>
+</section>
+
+<!-- 16 BISECT -->
+<section>
+  <h2>Finding the commit that broke things: <code>git bisect</code></h2>
+  <p class="small muted">Binary search over history. You say "good" or "bad", Git picks the next commit to test.</p>
+  <svg viewBox="0 0 960 200" width="960" id="bisect">
+    <line x1="30" y1="60" x2="930" y2="60" class="edge"/>
+    <g id="bis-nodes"></g>
+    <text x="30" y="110" text-anchor="middle" class="lbl" style="font-size:16px;fill:#3ddc84">v0.1 good</text>
+    <text x="930" y="110" text-anchor="middle" class="lbl" style="font-size:16px;fill:#ff5c5c">HEAD bad</text>
+    <!-- steps: mid of range; tested commits -->
+    <g class="fragment" data-bis="20,good"></g>
+    <g class="fragment" data-bis="30,bad"></g>
+    <g class="fragment" data-bis="25,good"></g>
+    <g class="fragment" data-bis="27,good"></g>
+    <g class="fragment" data-bis="28,bad"></g>
+    <g class="fragment" data-bis="found"></g>
+  </svg>
+  <div class="cols small">
+    <pre><code class="language-bash" data-trim>
+git bisect start
+git bisect bad            # HEAD is broken
+git bisect good v0.1      # this tag worked
+# Git checks out the middle commit. Test it.
+git bisect good   # or: git bisect bad
+# ... repeat ~log2(N) times ...
+# "abc123 is the first bad commit"
+git bisect reset          # back to where you were
+    </code></pre>
+    <ul>
+      <li>40 commits &rarr; ~6 tests. 1000 commits &rarr; ~10.</li>
+      <li>Works even if you don't understand the code. You only need a test.</li>
+      <li class="fragment">Automate: <code>git bisect run python check.py</code> (exit 0 = good).</li>
+      <li class="fragment">Needs small commits with honest messages. This is why we nag.</li>
+    </ul>
+  </div>
+  <aside class="notes">Walk the animation: each step halves the range. Note detached HEAD state during bisect; always `git bisect reset` afterwards before branching.</aside>
+</section>
+
+<!-- 17 EXERCISE -->
+<section>
+  <h2>Your turn: the glider died</h2>
+  <p class="small">Repo: <a href="https://github.com/WillJRoper/git-bisect-workshop" target="_blank">github.com/WillJRoper/git-bisect-workshop</a></p>
+  <ol class="steps">
+    <li><b>Fork</b> the repo on GitHub, then <code>git clone</code> your fork.</li>
+    <li>Run <code>python life.py glider</code>. It should fly forever. It dies. Tag <code>v0.1</code> worked.</li>
+    <li><code>git bisect</code> to find the commit that killed it. Read its diff.</li>
+    <li><code>git bisect reset</code>, then <code>git switch -c fix-glider</code>.</li>
+    <li>Fix it. Add a test so it can't happen again. <code>git add</code>, <code>git commit</code>.</li>
+    <li><code>git push -u origin fix-glider</code> and open a Pull Request against the original repo.</li>
+  </ol>
+  <p class="fragment small" style="margin-top:.6em">We'll review the PRs together. Stuck? Say so in chat. Full instructions in the README.</p>
+  <aside class="notes">~40 minutes. Share the README link in chat. Watch the PR list; merge the first good one live, then show what happens to the others.</aside>
+</section>
+
+</div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/notes/notes.min.js"></script>
+<script>
+// Bisect animation: 40 commits, range shrinks as fragments reveal.
+(function () {
+  const N = 40, x0 = 30, x1 = 930, y = 60;
+  const X = i => x0 + (x1 - x0) * (i - 1) / (N - 1);
+  const g = document.getElementById('bis-nodes');
+  const ns = 'http://www.w3.org/2000/svg';
+  const nodes = [];
+  for (let i = 1; i <= N; i++) {
+    const c = document.createElementNS(ns, 'circle');
+    c.setAttribute('cx', X(i)); c.setAttribute('cy', y); c.setAttribute('r', 9);
+    c.setAttribute('class', 'node' + (i === 1 ? ' good' : i === N ? ' bad' : ''));
+    g.appendChild(c); nodes.push(c);
+  }
+  // Labels drawn into each fragment group so they appear with it.
+  let lo = 1, hi = N;
+  const steps = document.querySelectorAll('#bisect [data-bis]');
+  const state = []; // snapshot of (lo,hi) after each step for backwards navigation
+  steps.forEach((grp, idx) => {
+    const spec = grp.dataset.bis;
+    if (spec === 'found') {
+      const t = document.createElementNS(ns, 'text');
+      t.setAttribute('x', X(28)); t.setAttribute('y', 165); t.setAttribute('text-anchor', 'middle');
+      t.setAttribute('class', 'lbl'); t.setAttribute('style', 'font-size:20px;fill:#ff5c5c;font-weight:700');
+      t.textContent = 'commit 28 is the first bad commit';
+      grp.appendChild(t);
+      const l = document.createElementNS(ns, 'line');
+      l.setAttribute('x1', X(28)); l.setAttribute('y1', 75); l.setAttribute('x2', X(28)); l.setAttribute('y2', 145);
+      l.setAttribute('style', 'stroke:#ff5c5c;stroke-width:3');
+      grp.appendChild(l);
+      state.push({lo, hi, i: null, v: null, idx});
+      return;
+    }
+    const [iS, verdict] = spec.split(','); const i = +iS;
+    const t = document.createElementNS(ns, 'text');
+    t.setAttribute('x', X(i)); t.setAttribute('y', 30); t.setAttribute('text-anchor', 'middle');
+    t.setAttribute('class', 'lbl'); t.setAttribute('style', 'font-size:15px;fill:' + (verdict === 'good' ? '#3ddc84' : '#ff5c5c'));
+    t.textContent = (idx + 1) + ': ' + verdict;
+    grp.appendChild(t);
+    if (verdict === 'good') lo = i; else hi = i;
+    state.push({lo, hi, i, v: verdict, idx});
+  });
+  function render(upto) { // upto = number of visible step fragments
+    nodes.forEach((c, k) => {
+      const i = k + 1;
+      let cls = 'node';
+      if (i === 1) cls += ' good'; if (i === N) cls += ' bad';
+      c.setAttribute('class', cls);
+    });
+    let lo = 1, hi = N;
+    for (let s = 0; s < upto && s < state.length; s++) {
+      const st = state[s];
+      if (st.i) nodes[st.i - 1].setAttribute('class', 'node ' + st.v);
+      lo = st.lo; hi = st.hi;
+    }
+    nodes.forEach((c, k) => {
+      const i = k + 1;
+      if ((i < lo || i > hi) && i !== 1 && i !== N) c.setAttribute('class', 'node dim');
+    });
+  }
+  function update() {
+    let vis = 0; steps.forEach(s => { if (s.classList.contains('visible')) vis++; });
+    render(vis);
+  }
+  Reveal.on('fragmentshown', update); Reveal.on('fragmenthidden', update); Reveal.on('slidechanged', update);
+})();
+Reveal.initialize({
+  hash: true, slideNumber: 'c/t', width: 1100, height: 700, margin: 0.06,
+  transition: 'slide', controls: true, progress: true,
+  plugins: [RevealHighlight, RevealNotes]
+});
+</script>
+</body>
+</html>
