@@ -472,12 +472,12 @@ class: section-card
 <div class="muted mt-4">binary search over your history</div>
 
 ---
-clicks: 8
+clicks: 9
 ---
 
 # Finding The Commit That Broke Things
 
-<GitBisect :step="Math.min($clicks, 6)" />
+<GitBisect :step="Math.min($clicks, 7)" />
 
 <div class="grid grid-cols-[1.2fr_1fr] gap-8 text-sm mt-1">
 <div class="term">
@@ -497,14 +497,14 @@ git bisect reset            # back to where you were
 </div>
 <div>
 
-- 40 commits: about 6 tests. 1000 commits: about 10.
+- 64 commits: 6 tests. 1000 commits: about 10.
 - You don't need to understand the code. You need a test.
-<div v-click="7">
+<div v-click="8">
 
 - Automate it: <code>git bisect run python check.py</code> <span class="muted">(exit 0 = good)</span>
 
 </div>
-<div v-click="8">
+<div v-click="9">
 
 - Only works with small commits and honest messages. This is why we nag.
 
@@ -525,7 +525,7 @@ During bisect you're in detached HEAD. Always `git bisect reset` before branchin
 <div class="grid grid-cols-[1.3fr_1fr] gap-8 items-start">
 <div class="text-sm">
 
-1. **Fork** <a href="https://github.com/WillJRoper/git-bisect-workshop" target="_blank">WillJRoper/git-bisect-workshop</a>, then <code>git clone</code> your fork.
+1. **Fork** <a href="https://github.com/WillJRoper/git-bisect-glider-hunt" target="_blank">WillJRoper/git-bisect-glider-hunt</a>, then <code>git clone</code> your fork.
 2. Run <code>python life.py glider</code>. It should fly forever. It dies. Tag <code>v0.1</code> worked.
 3. <code>git bisect</code> to find the commit that killed it. Read its diff.
 4. <code>git bisect reset</code>, then <code>git switch -c fix-glider</code>.

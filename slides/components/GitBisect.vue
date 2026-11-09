@@ -1,10 +1,11 @@
 <script setup>
-// 40 commits on a line. Each step tests a commit and halves the range.
-// step 0: nothing tested. steps 1..5: tests. step 6: culprit found.
+// 64 commits on a line. Each step tests a commit and halves the range.
+// step 0: nothing tested. steps 1..6: tests. step 7: culprit found.
+// Deliberately not the same numbers as the exercise repo.
 import { computed } from 'vue'
 const props = defineProps({ step: { type: Number, default: 0 } })
-const N = 40, CULPRIT = 28
-const TESTS = [[20, 'good'], [30, 'bad'], [25, 'good'], [27, 'good'], [28, 'bad']]
+const N = 64, CULPRIT = 41
+const TESTS = [[32, 'good'], [48, 'bad'], [40, 'good'], [44, 'bad'], [42, 'bad'], [41, 'bad']]
 const X = (i) => 30 + 900 * (i - 1) / (N - 1)
 const state = computed(() => {
   let lo = 1, hi = N
@@ -29,18 +30,15 @@ const cls = (i) => {
 <template>
   <svg viewBox="0 0 960 190" class="bs">
     <line x1="30" y1="70" x2="930" y2="70" class="edge" />
-    <circle v-for="i in N" :key="i" :cx="X(i)" cy="70" r="9" :class="['node', cls(i)]" />
+    <circle v-for="i in N" :key="i" :cx="X(i)" cy="70" r="6" :class="['node', cls(i)]" />
     <text :x="X(1)" y="115" class="tag good">v0.1 good</text>
     <text :x="X(N)" y="115" class="tag bad">HEAD bad</text>
-    <g v-for="([i, v], s) in TESTS" :key="s" :class="['st', { on: step >= s + 1 }]">
-      <text :x="X(i)" y="45" :class="['tag', v]">{{ s + 1 }}</text>
-    </g>
-    <g :class="['st', { on: step >= 6 }]">
+    <g :class="['st', { on: step >= 7 }]">
       <line :x1="X(CULPRIT)" y1="85" :x2="X(CULPRIT)" y2="150" class="pin" />
       <text :x="X(CULPRIT)" y="175" class="found">{{ CULPRIT }} is the first bad commit</text>
     </g>
-    <text x="480" y="150" :class="['hint', { gone: step >= 6 }]">
-      {{ step === 0 ? '40 commits. Where did it break?' : `${state.hi - state.lo - 1} commits left to check` }}
+    <text x="480" y="150" :class="['hint', { gone: step >= 7 }]">
+      {{ step === 0 ? '64 commits. Where did it break?' : `${state.hi - state.lo - 1} commits left to check` }}
     </text>
     <text x="480" y="20" class="log"><tspan v-for="([i, v], s) in TESTS" :key="s" :class="[v, { hidden: step < s + 1 }]">{{ s + 1 }}: {{ i }} {{ v }}&#160;&#160;&#160;</tspan></text>
   </svg>
