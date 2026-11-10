@@ -359,6 +359,58 @@ Optionally `git checkout HEAD~2` to show detached HEAD, which they'll meet in bi
 -->
 
 ---
+clicks: 1
+---
+
+# A Real One
+
+<div class="muted text-sm -mt-4 mb-2">Synthesizer. Every dot a commit, every line a parent pointer.</div>
+
+<img src="/img/synthesizer_logo.png" class="absolute top-6 right-8 h-16" alt="Synthesizer logo" />
+
+<div class="body flex flex-col">
+<div class="flex-1 min-h-0">
+<div v-if="$clicks === 0" class="flex gap-16 items-center justify-center h-full">
+<img src="/img/synthesizer_all.png" class="h-[340px] w-auto" alt="Every commit in the Synthesizer repository, force-directed layout" />
+<div class="text-sm">
+
+- **12,928** commits
+- **183** branches
+- **2,631** merges
+- **37** authors
+
+<div class="muted mt-6">Looks like chaos. It isn't:<br>it's just time, squashed flat.</div>
+
+</div>
+</div>
+<div v-else class="h-full flex flex-col justify-center px-12">
+<div class="flex items-center gap-3 muted text-xs mb-3">
+<span>4 weeks ago</span>
+<div class="flex-1 h-px" style="background: var(--muted)"></div>
+<span>time</span>
+<div class="flex-1 h-px" style="background: var(--muted)"></div>
+<span>today <span style="color: var(--ink)">▶</span></span>
+</div>
+<img src="/img/synthesizer_month.png" class="w-full h-auto max-h-[330px] object-contain" alt="The last four weeks of Synthesizer commits, oldest on the left" />
+</div>
+</div>
+<div class="muted text-sm mt-6 mb-2 flex gap-10 justify-center">
+<span><span class="dot" style="background: var(--accent)"></span> on <code>main</code></span>
+<span><span class="dot" style="background: var(--theory)"></span> merged into <code>main</code></span>
+<span><span class="dot" style="background: var(--warn)"></span> not merged yet</span>
+<span><span class="dot" style="background: var(--merge)"></span> merge commit</span>
+</div>
+</div>
+
+<style>
+.dot { display: inline-block; width: 0.7em; height: 0.7em; border-radius: 50%; vertical-align: middle; margin-right: 0.3em; }
+</style>
+
+<!--
+Click 0: the whole history as a hairball. Click 1: the last four weeks laid out left to right. Same data, time axis restored. Branches peel off main and come back. Amber lines that never return are open PRs.
+-->
+
+---
 clicks: 5
 ---
 
