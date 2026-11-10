@@ -156,8 +156,8 @@ class: section-card
 <div class="muted mb-2">$ git log --stat</div>
 <div class="grid grid-cols-4 gap-2 text-center">
 <div class="muted">C1</div><div class="muted">C2</div><div class="muted">C3</div><div class="muted"></div>
-<div class="snap">A1</div><div class="snap ref">A1</div><div class="snap">A2</div><div class="muted text-xs self-center">life.py</div>
-<div class="snap">B1</div><div class="snap">B2</div><div class="snap ref">B2</div><div class="muted text-xs self-center">test_life.py</div>
+<div class="snap">A1</div><div class="snap ref">A1</div><div class="snap">A2</div><div class="muted text-xs self-center">plot.py</div>
+<div class="snap">B1</div><div class="snap">B2</div><div class="snap ref">B2</div><div class="muted text-xs self-center">test_plot.py</div>
 <div class="snap">C1</div><div class="snap ref">C1</div><div class="snap ref">C1</div><div class="muted text-xs self-center">README.md</div>
 </div>
 <div class="muted text-xs mt-3"><span class="snap ref inline-block px-2">grey</span> = unchanged, points at the earlier blob</div>
@@ -226,12 +226,12 @@ commit 5d3e831e867d5a4f1a83750ad82fd46041ac58e5
 Author: Ada Lovelace <ada@example.org>
 Date:   Tue Nov 4 10:12:33 2026 +0000
 
-    Fix wrap-around when glider reaches grid edge
+    Stop axis labels being clipped in saved figures
 
-diff --git a/life.py b/life.py
-@@ -14,7 +14,7 @@ def neighbours(cell, width, height):
--        yield (x + dx), (y + dy)
-+        yield (x + dx) % width, (y + dy) % height
+diff --git a/plot.py b/plot.py
+@@ -22,7 +22,7 @@ def save(fig, path):
+-    fig.savefig(path)
++    fig.savefig(path, bbox_inches="tight")
 ```
 
 </div>
@@ -311,10 +311,10 @@ Different files, or different lines of the same file: Git combines them. No huma
 
 ```text {*}{lines:false}
 <<<<<<< HEAD
-    if count == 3:
+    fig.savefig(path, dpi=150)
 =======
-    if count in (2, 3):
->>>>>>> fix-glider
+    fig.savefig(path, dpi=300)
+>>>>>>> new-feature
 ```
 
 Same lines edited on both sides. Git stops, marks the file, you choose. Then <code>add</code> and <code>commit</code>.
@@ -417,13 +417,13 @@ class: section-card
 
 ```bash {*}{lines:false}
 git pull                          # start from the latest
-git switch -c fix-glider          # one branch per task
+git switch -c new-feature         # one branch per task
 # ... edit ...
 git status                        # what changed?
 git diff                          # exactly what changed?
-git add life.py test_life.py      # pick what goes in
-git commit -m "Fix glider dying at diagonal births"
-git push -u origin fix-glider     # first push of a new branch
+git add plot.py test_plot.py      # pick what goes in
+git commit -m "Fix clipped axis labels in saved figures"
+git push -u origin new-feature    # first push of a new branch
 # then open a Pull Request on GitHub
 ```
 
