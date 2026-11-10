@@ -260,7 +260,6 @@ diff --git a/plot.py b/plot.py
   <circle cx="600" cy="55" r="13" class="node" /><text x="600" y="86" class="lbl">a1f3c02</text>
   <circle cx="780" cy="55" r="13" class="node head" /><text x="780" y="86" class="lbl head">5d3e831</text>
   <text x="780" y="24" class="ref">HEAD -> main</text>
-  <text x="250" y="24" class="note">newest first, each pointing at its parent</text>
 </svg>
 </div>
 </div>
@@ -275,7 +274,6 @@ diff --git a/plot.py b/plot.py
 .chain .ref { fill: var(--accent); font-size: 15px; font-weight: 700; text-anchor: middle; }
 .chain .cmd { fill: var(--warn); font-size: 15px; }
 .chain .dots { fill: #555; font-size: 22px; }
-.chain .note { fill: var(--muted); font-size: 14px; }
 </style>
 
 ---
