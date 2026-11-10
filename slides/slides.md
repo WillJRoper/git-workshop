@@ -601,7 +601,7 @@ During bisect you're in detached HEAD. Always `git bisect reset` before branchin
 <div class="grid grid-cols-[1.3fr_1fr] gap-8 items-start">
 <div class="text-sm">
 
-1. **Fork** <a href="https://github.com/WillJRoper/git-bisect-glider-hunt" target="_blank">WillJRoper/git-bisect-glider-hunt</a>, then <code>git clone</code> your fork.
+1. **Fork** <a href="https://github.com/WillJRoper/git-bisect-workshop" target="_blank">WillJRoper/git-bisect-workshop</a>, then <code>git clone</code> your fork.
 2. Run <code>python life.py glider</code>. It should fly forever. It dies. Tag <code>v0.1</code> worked.
 3. <code>git bisect</code> to find the commit that killed it. Read its diff.
 4. <code>git bisect reset</code>, then <code>git switch -c fix-glider</code>.
@@ -614,7 +614,6 @@ During bisect you're in detached HEAD. Always `git bisect reset` before branchin
 <div class="muted">$ cat HELP.txt</div>
 <div class="mt-2">Stuck? Ask.</div>
 <div class="mt-2">Full instructions in the README.</div>
-<div class="mt-2">No local git? Open the fork in <strong>Codespaces</strong>.</div>
 <div class="mt-4 muted">We review the PRs together at the end.</div>
 </div>
 </div>

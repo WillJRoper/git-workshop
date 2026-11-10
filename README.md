@@ -2,7 +2,7 @@
 
 Slides for a one-hour git workshop: <https://willjroper.github.io/git-workshop/>
 
-The hands-on half lives in [git-bisect-glider-hunt](https://github.com/WillJRoper/git-bisect-glider-hunt).
+The hands-on half lives in [git-bisect-workshop](https://github.com/WillJRoper/git-bisect-workshop).
 
 ```bash
 cd slides && npm install && npm run dev

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the git-bisect-glider-hunt exercise repository.
+"""Generate the git-bisect-workshop exercise repository.
 
 Builds a fresh git repo with ~40 realistic commits of a small Game of Life,
 four fictional authors, a `v0.1` tag where the glider still flies, and one
@@ -7,7 +7,7 @@ refactor commit part-way through that silently breaks it. Every commit is
 checked: the unit tests pass throughout, the glider lives at v0.1 and dies
 at HEAD.
 
-    python exercise/seed_history.py ../git-bisect-glider-hunt
+    python exercise/seed_history.py ../git-bisect-workshop
 
 The target directory must not exist. Do not commit this file to the
 exercise repo: it names the culprit.
@@ -31,7 +31,7 @@ START = datetime(2026, 8, 3, 9, 12)
 CULPRIT_MESSAGE = "Extract neighbour counting into its own function"
 GOOD_TAG = "v0.1"
 GOOD_TAG_AFTER = "Add place() to offset patterns into the grid"
-REPO_URL = "https://github.com/WillJRoper/git-bisect-glider-hunt"
+REPO_URL = "https://github.com/WillJRoper/git-bisect-workshop"
 
 
 class Repo:
@@ -284,22 +284,32 @@ PULSAR = sorted(
     | {(x, y) for y in (2, 3, 4, 8, 9, 10) for x in (0, 5, 7, 12)}
 )
 
-README_FINAL = f'''# git-bisect-glider-hunt
+README_FINAL = f'''# git-bisect-workshop
 
-A tiny Game of Life, and a bug hunt. This repo is the hands-on half of a
-one-hour git workshop. The slides are at
-<https://willjroper.github.io/git-workshop/>.
+A tiny Game of Life with a bug somewhere in its history. The hands-on half of
+a one-hour git workshop. Slides: <https://willjroper.github.io/git-workshop/>.
+
+## Get started
+
+1. Click **Fork** at the top right of this page. Keep the defaults.
+2. Clone *your* fork, not this repo:
+
+   ```bash
+   git clone https://github.com/YOUR-USERNAME/git-bisect-workshop.git
+   cd git-bisect-workshop
+   ```
+
+3. Run it:
+
+   ```bash
+   python life.py glider
+   ```
 
 ## The problem
 
-Somewhere in this repository's history the glider stopped flying. Run it:
-
-```bash
-python life.py glider
-```
-
-It should glide diagonally across the grid forever, wrapping at the edges.
-Instead it hits the bottom edge and freezes. Tag `v0.1` definitely worked:
+The glider should glide diagonally across the grid forever, wrapping at the
+edges. Instead it hits the bottom edge and freezes. Tag `v0.1` definitely
+worked:
 
 ```bash
 git switch --detach v0.1
@@ -311,33 +321,9 @@ The tests pass at every commit, so nobody noticed. Your job: find the commit
 that broke it, fix it, add a test that would have caught it, and open a pull
 request.
 
-## Before the workshop
-
-You need, in this order:
-
-1. A [GitHub account](https://github.com/signup).
-2. `git` and Python 3 installed. Check with `git --version` and
-   `python3 --version`.
-3. A way to push to GitHub. Either run `gh auth login`
-   ([GitHub CLI](https://cli.github.com/)) or
-   [add an SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh).
-
-No local setup? Fork the repo, then open your fork in a Codespace
-(green **Code** button, **Codespaces** tab). Everything below works there.
-
 ## The exercise
 
-### 1. Fork and clone
-
-Click **Fork** at the top of this page, then:
-
-```bash
-git clone git@github.com:YOUR-USERNAME/git-bisect-glider-hunt.git
-cd git-bisect-glider-hunt
-python life.py glider          # watch it die
-```
-
-### 2. Find the culprit with `git bisect`
+### 1. Find the culprit with `git bisect`
 
 ```bash
 git bisect start
@@ -380,7 +366,7 @@ raise SystemExit(0 if len(cells) == 5 else 1)
 
 then `git bisect run python check_glider.py` does the whole search.
 
-### 3. Fix it on a branch
+### 2. Fix it on a branch
 
 ```bash
 git switch -c fix-glider
@@ -388,7 +374,7 @@ git switch -c fix-glider
 python life.py glider          # flies again?
 ```
 
-### 4. Add the test that was missing
+### 3. Add the test that was missing
 
 The existing tests only use patterns that sit still in the middle of the
 grid. Add a test to `test_life.py` that exercises the glider crossing an
@@ -399,7 +385,7 @@ after 160 generations.
 python -m unittest -v
 ```
 
-### 5. Commit and push
+### 4. Commit and push
 
 ```bash
 git status
@@ -409,10 +395,10 @@ git commit -m "Fix glider freezing at the bottom edge"
 git push -u origin fix-glider
 ```
 
-### 6. Open a pull request
+### 5. Open a pull request
 
 GitHub prints a link after the push. Open it, make sure the base is
-`WillJRoper/git-bisect-glider-hunt` and `main`, write one or two sentences about what
+`WillJRoper/git-bisect-workshop` and `main`, write one or two sentences about what
 was wrong, and submit. The tests run automatically on the PR.
 
 ## Running the demo
