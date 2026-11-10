@@ -38,7 +38,7 @@ const cls = (i) => {
       <text :x="X(CULPRIT)" y="175" class="found">{{ CULPRIT }} is the first bad commit</text>
     </g>
     <text x="480" y="150" :class="['hint', { gone: step >= 7 }]">
-      {{ step === 0 ? '64 commits. Where did it break?' : `${state.hi - state.lo - 1} commits left to check` }}
+      {{ step === 0 ? '64 commits. Where did it break?' : `${state.hi - state.lo - 1} ${state.hi - state.lo - 1 === 1 ? 'commit' : 'commits'} left to check` }}
     </text>
     <text x="480" y="20" class="log"><tspan v-for="([i, v], s) in TESTS" :key="s" :class="[v, { hidden: step < s + 1 }]">{{ s + 1 }}: {{ i }} {{ v }}&#160;&#160;&#160;</tspan></text>
   </svg>

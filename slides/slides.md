@@ -427,7 +427,7 @@ clicks: 5
 </div>
 </div>
 
-<div class="credit">Pushing needs authentication: an SSH key or <code>gh auth login</code>. Set up before today, see the README.</div>
+<div class="credit">Pushing needs authentication: an SSH key or <code>gh auth login</code>. Set up before today.</div>
 
 <!--
 Build it up: create an empty repo on GitHub, add it as origin, push. Clone it on another machine, push from there, pull back on the laptop.
@@ -602,7 +602,7 @@ During bisect you're in detached HEAD. Always `git bisect reset` before branchin
 <div class="text-sm">
 
 1. **Fork** <a href="https://github.com/WillJRoper/git-bisect-workshop" target="_blank">WillJRoper/git-bisect-workshop</a>, then <code>git clone</code> your fork.
-2. Run <code>python life.py glider</code>. It should fly forever. It dies. Tag <code>v0.1</code> worked.
+2. Run <code>python life&#46;py glider</code>. It should fly forever. It dies. Tag <code>v0.1</code> worked.
 3. <code>git bisect</code> to find the commit that killed it. Read its diff.
 4. <code>git bisect reset</code>, then <code>git switch -c fix-glider</code>.
 5. Fix it. Add a test so it can't come back. <code>git add</code>, <code>git commit</code>.
@@ -614,7 +614,6 @@ During bisect you're in detached HEAD. Always `git bisect reset` before branchin
 <div class="muted">$ cat HELP.txt</div>
 <div class="mt-2">Stuck? Ask.</div>
 <div class="mt-2">Full instructions in the README.</div>
-<div class="mt-4 muted">We review the PRs together at the end.</div>
 </div>
 </div>
 </div>
