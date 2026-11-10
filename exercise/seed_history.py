@@ -288,7 +288,7 @@ README_FINAL = f'''# git-bisect-glider-hunt
 
 A tiny Game of Life, and a bug hunt. This repo is the hands-on half of a
 one-hour git workshop. The slides are at
-<https://willjroper.github.io/Git/>.
+<https://willjroper.github.io/git-workshop/>.
 
 ## The problem
 

@@ -244,13 +244,39 @@ diff --git a/life.py b/life.py
 - **Parent**: this is what makes it a history
 
 <div class="muted mt-4 text-xs">
-<code>git log</code> walks the chain.<br>
 <code>git diff a1f3 5d3e</code> compares any two points.
 </div>
 
 </div>
 </div>
+
+<div v-click class="mt-4">
+<svg viewBox="0 0 960 90" class="chain">
+  <text x="0" y="24" class="cmd">$ git log --oneline</text>
+  <text x="0" y="60" class="dots">···</text>
+  <line x1="60" y1="55" x2="780" y2="55" class="edge" />
+  <circle cx="240" cy="55" r="13" class="node" /><text x="240" y="86" class="lbl">c91a0f2</text>
+  <circle cx="420" cy="55" r="13" class="node" /><text x="420" y="86" class="lbl">7b2d4e9</text>
+  <circle cx="600" cy="55" r="13" class="node" /><text x="600" y="86" class="lbl">a1f3c02</text>
+  <circle cx="780" cy="55" r="13" class="node head" /><text x="780" y="86" class="lbl head">5d3e831</text>
+  <text x="780" y="24" class="ref">HEAD -> main</text>
+  <text x="250" y="24" class="note">newest first, each pointing at its parent</text>
+</svg>
 </div>
+</div>
+
+<style>
+.chain { width: 100%; height: auto; overflow: visible; font-family: var(--mono); }
+.chain .edge { stroke: #555; stroke-width: 3; }
+.chain .node { fill: #555; stroke: #000; stroke-width: 3; }
+.chain .node.head { fill: var(--accent); }
+.chain .lbl { fill: var(--muted); font-size: 15px; text-anchor: middle; }
+.chain .lbl.head { fill: var(--ink); }
+.chain .ref { fill: var(--accent); font-size: 15px; font-weight: 700; text-anchor: middle; }
+.chain .cmd { fill: var(--warn); font-size: 15px; }
+.chain .dots { fill: #555; font-size: 22px; }
+.chain .note { fill: var(--muted); font-size: 14px; }
+</style>
 
 ---
 clicks: 3
